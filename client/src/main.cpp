@@ -27,11 +27,11 @@ public:
 			WSACleanup();
 			return;
 		}
-		else std::cout << "Server socket initialization is OK" << std::endl;
-		m_stop = false;
+		else std::cout << "Client socket initialization is OK" << std::endl;
 	}
 
 	~Network() {
+		m_stop = true;
 		WSACleanup();
 		closesocket(m_socket);
 	}
@@ -59,7 +59,10 @@ public:
 			closesocket(m_socket);
 			return false;
 		}
-		else return true;
+		else {
+			m_stop = false;
+			return true;
+		}
 	}
 
 	void Handler() {
@@ -102,7 +105,6 @@ int main() {
 
 	while (true) {
 		std::string str;
-		std::cout << " : ";
 		std::getline(std::cin, str);
 		net.Send(str.c_str(), str.size());
 	}
