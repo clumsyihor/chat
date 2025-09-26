@@ -99,19 +99,34 @@ public:
 	}
 
 	void ClientHandler(SOCKET socket) {
-		std::vector <char> data_buffer(MAX_BUFFER_SIZE);
-		short data_size = 0;
+		std::vector<char> data_buffer(MAX_BUFFER_SIZE);
+		int data_size = 0;
 
 		while (!m_stop) {
 			data_size = recv(socket, data_buffer.data(), data_buffer.size(), 0);
-			std::cout << "Client message: " << data_buffer.data() << std::endl;
 
-			for (auto& client : m_clients) {
-				data_size = send(client, data_buffer.data(), data_buffer.size(), 0);
+			if (data_size > 0) {
+				std::string message(data_buffer.data(), data_size);
+				std::cout << "Client message: " << message << std::endl;
 
-				if (data_size == SOCKET_ERROR) {
-					std::cout << "Can't send message to Client. Error # " << WSAGetLastError() << std::endl;
+
+				for (auto& client : m_clients) {
+					int sent = send(client, message.c_str(), message.size(), 0);
+					if (sent == SOCKET_ERROR) {
+						std::cout << "Can't send message to Client. Error # "
+							<< WSAGetLastError() << std::endl;
+					}
 				}
+			}
+			else if (data_size == 0) {
+				std::cout << "Client disconnected." << std::endl;
+				closesocket(socket);
+				break;
+			}
+			else {
+				std::cout << "Recv failed. Error # " << WSAGetLastError() << std::endl;
+				closesocket(socket);
+				break;
 			}
 		}
 	}
