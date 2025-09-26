@@ -1,0 +1,6 @@
+C:/Users/garch/OneDrive/Рабочий стол/chat/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/garch/OneDrive/Рабочий стол/chat/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/garch/OneDrive/Рабочий стол/chat/build/client/CMakeFiles/chat_client.dir
+C:/Users/garch/OneDrive/Рабочий стол/chat/build/client/CMakeFiles/ALL_BUILD.dir
+C:/Users/garch/OneDrive/Рабочий стол/chat/build/server/CMakeFiles/chat_server.dir
+C:/Users/garch/OneDrive/Рабочий стол/chat/build/server/CMakeFiles/ALL_BUILD.dir
