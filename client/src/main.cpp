@@ -56,7 +56,6 @@ public:
 
 		if (erStat != 0) {
 			std::cerr << "Connection to Server is FAILED. Error # " << WSAGetLastError() << std::endl;
-			closesocket(m_socket);
 			return false;
 		}
 		else {
@@ -66,22 +65,32 @@ public:
 	}
 
 	void Handler() {
-		std::vector <char> data_buffer(MAX_BUFFER_SIZE);
-		short data_size = 0;
+		std::vector<char> data_buffer(MAX_BUFFER_SIZE);
+		int data_size = 0;
 
 		while (!m_stop) {
 			data_size = recv(m_socket, data_buffer.data(), data_buffer.size(), 0);
 
-			if (data_size == SOCKET_ERROR) {
-				std::cerr << "Socker error #" << WSAGetLastError() << std::endl;
+			if (data_size > 0) {
+				std::string message(data_buffer.data(), data_size);
+				std::cout << "Server message: " << message << std::endl;
 			}
-
-			std::cout << data_buffer.data() << std::endl;
+			else if (data_size == 0) {
+				std::cout << "Server disconnected." << std::endl;
+				closesocket(m_socket);
+				break;
+			}
+			else {
+				std::cerr << "Recv failed. Error # " << WSAGetLastError() << std::endl;
+				closesocket(m_socket);
+				break;
+			}
 		}
 	}
 
+
 	bool Send(const char* data, size_t size) {
-		short data_size = send(m_socket, data, size, 0);
+		int data_size = send(m_socket, data, size, 0);
 
 		if (data_size == SOCKET_ERROR) {
 			std::cout << "Can't send message to Server. Error # " << WSAGetLastError() << std::endl;

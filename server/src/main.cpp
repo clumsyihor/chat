@@ -109,9 +109,12 @@ public:
 				std::string message(data_buffer.data(), data_size);
 				std::cout << "Client message: " << message << std::endl;
 
+				message = "[] " + message;
 
 				for (auto& client : m_clients) {
+					if (client == socket) continue;
 					int sent = send(client, message.c_str(), message.size(), 0);
+
 					if (sent == SOCKET_ERROR) {
 						std::cout << "Can't send message to Client. Error # "
 							<< WSAGetLastError() << std::endl;
